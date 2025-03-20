@@ -27,23 +27,23 @@ public class Service {
 
     public String getWeather(String city) {
         try {
-            // Pobierz współrzędne geograficzne
+            // Get geo coordinates
             JSONObject coordinates = getCoordinates(city);
             double lat = coordinates.getDouble("lat");
             double lon = coordinates.getDouble("lon");
 
-            // Tworzenie URL do zapytania Current Weather API
+            // Creating url for Current Weather API
             String apiUrl = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + openWeatherMapApiKey + "&units=metric";
             URL url = new URL(apiUrl);
 
-            // Otwarcie połączenia HTTP
+            // Open HTTP connection
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
-            // Sprawdzenie odpowiedzi serwera
+            // Check server response
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                // Odczytanie odpowiedzi
+                // Read response
                 BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 StringBuilder response = new StringBuilder();
                 String inputLine;
@@ -52,7 +52,7 @@ public class Service {
                 }
                 in.close();
 
-                // Parsowanie odpowiedzi JSON
+                // Parse JSON
                 JSONObject jsonResponse = new JSONObject(response.toString());
                 JSONObject main = jsonResponse.getJSONObject("main");
                 JSONObject weather = jsonResponse.getJSONArray("weather").getJSONObject(0);
@@ -63,14 +63,14 @@ public class Service {
                 String weatherDescription = weather.getString("description");
 
                 // Formatowanie wyniku
-                return "Pogoda w " + cityName + ":\n" +
-                        "Temperatura: " + temperature + "°C\n" +
-                        "Opis: " + weatherDescription;
+                return "Current forecast in " + cityName + ":\n" +
+                        "Temp: " + temperature + "°C\n" +
+                        "Note: " + weatherDescription;
             } else {
-                return "Błąd podczas pobierania danych pogodowych. Kod odpowiedzi: " + responseCode;
+                return "Error getting forecast data. Response Code: " + responseCode;
             }
         } catch (Exception e) {
-            throw new RuntimeException("Wystąpił błąd: " + e.getMessage(), e);
+            throw new RuntimeException("Err: " + e.getMessage(), e);
         }
     }
     public Double getRate(){
@@ -82,18 +82,18 @@ public class Service {
     }
     private JSONObject getCoordinates(String city) {
         try {
-            // Tworzenie URL do zapytania Geocoding API
+            // Creating URL for Geocoding API
             String apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "," + country + "&limit=1&appid=" + openWeatherMapApiKey;
             URL url = new URL(apiUrl);
 
-            // Otwarcie połączenia HTTP
+            // Open HTTP connection
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
-            // Sprawdzenie odpowiedzi serwera
+            // Check server response
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                // Odczytanie odpowiedzi
+                // Read response
                 BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 StringBuilder response = new StringBuilder();
                 String inputLine;
@@ -102,18 +102,18 @@ public class Service {
                 }
                 in.close();
 
-                // Parsowanie odpowiedzi JSON
+                // Parse JSON response
                 JSONArray jsonArray = new JSONArray(response.toString());
                 if (jsonArray.length() > 0) {
-                    return jsonArray.getJSONObject(0); // Zwróć pierwszy wynik
+                    return jsonArray.getJSONObject(0); // Return 1st result
                 } else {
-                    throw new RuntimeException("Nie znaleziono współrzędnych dla miasta: " + city);
+                    throw new RuntimeException("Coordinates were not found for city: " + city);
                 }
             } else {
-                throw new RuntimeException("Błąd podczas pobierania współrzędnych. Kod odpowiedzi: " + responseCode);
+                throw new RuntimeException("Error getting coordinates data. Response Code: " + responseCode);
             }
         } catch (Exception e) {
-            throw new RuntimeException("Wystąpił błąd: " + e.getMessage(), e);
+            throw new RuntimeException("Err: " + e.getMessage(), e);
         }
     }
 
@@ -122,7 +122,7 @@ public class Service {
         Service service = new Service(country);
 
         // testing
-        String city = "Warsaw";
+        String city = "Wroclaw";
         String weatherInfo = service.getWeather(city);
         System.out.println(weatherInfo);
     }
