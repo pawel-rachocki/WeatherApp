@@ -57,12 +57,12 @@ public class Service {
                 JSONObject main = jsonResponse.getJSONObject("main");
                 JSONObject weather = jsonResponse.getJSONArray("weather").getJSONObject(0);
 
-                // Wyciągnięcie potrzebnych informacji
+                // Specify needed data
                 String cityName = jsonResponse.getString("name");
                 double temperature = main.getDouble("temp");
                 String weatherDescription = weather.getString("description");
 
-                // Formatowanie wyniku
+                // Format return
                 return "Current forecast in " + cityName + ":\n" +
                         "Temp: " + temperature + "°C\n" +
                         "Note: " + weatherDescription;
@@ -70,7 +70,7 @@ public class Service {
                 return "Error getting forecast data. Response Code: " + responseCode;
             }
         } catch (Exception e) {
-            throw new RuntimeException("Err: " + e.getMessage(), e);
+            throw new RuntimeException("Error: " + e.getMessage(), e);
         }
     }
     public Double getRate(){
@@ -113,17 +113,7 @@ public class Service {
                 throw new RuntimeException("Error getting coordinates data. Response Code: " + responseCode);
             }
         } catch (Exception e) {
-            throw new RuntimeException("Err: " + e.getMessage(), e);
+            throw new RuntimeException("Error: " + e.getMessage(), e);
         }
-    }
-
-    public static void main(String[] args) {
-        String country = "Poland";
-        Service service = new Service(country);
-
-        // testing
-        String city = "Wroclaw";
-        String weatherInfo = service.getWeather(city);
-        System.out.println(weatherInfo);
     }
 }

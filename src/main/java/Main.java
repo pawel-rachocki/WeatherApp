@@ -1,6 +1,10 @@
+import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("test");
+        SwingUtilities.invokeLater(() -> {
+            WeatherAppGUI app = new WeatherAppGUI();
+            app.setVisible(true);
+        });
     }
 }
